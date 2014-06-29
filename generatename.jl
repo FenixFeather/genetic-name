@@ -4,7 +4,9 @@
 
 
 using ArgParse
+import Base.length
 
+## Name methods
 type Name
     chromosomes
     parents
@@ -39,10 +41,12 @@ function mate(left::Name, right::Name)
         smaller_name, other_name = right, left
     end
     while length(smaller_name) <= length(other_name)
-        push!(smaller_name, generate_syllable())
+        push!(smaller_name.chromosomes, generate_syllable())
     end
+    result[1] = ["", "", ""]
     while length(result) < length(left)
-        push!(result, ["", "", ""])
+        push!(result, String["", "", ""])
+    end
     for ii in 1:length(left.chromosomes)
         for jj in 1:length(left.chromosomes[ii])
             chosen = randbool() ? left : right
@@ -50,7 +54,11 @@ function mate(left::Name, right::Name)
             end
         end
     end
-    return 
+    return Name(result)
+end
+
+function length(name::Name)
+    return Base.length(name.chromosomes)
 end
 
 function string(name::Name)
@@ -62,6 +70,7 @@ function string(name::Name)
     return join(result, " ")
 end
 
+## Static methods
 function generate_name(range)
     vowels = "aeiouy"
     consonants = "bcdfghjklmnpqrstvwxyz"

@@ -28,7 +28,7 @@ end
 
 function test_mate()
 
-    bla = Name(Array[["b", "e", "n"], ["t", "e", "e"]],
+    bob = Name(Array[["b", "e", "n"], ["t", "e", "e"]],
                ["sfd", "Fsd"],
                ["sdf", "sdf"],
                42)
