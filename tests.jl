@@ -5,42 +5,35 @@
 include("generatename.jl")
 
 function test_string()
-    bla = Name(Array[["d", "e", "n"], ["l", "i", "u"]],
-               ["sfd", "Fsd"],
-               ["sdf", "sdf"],
-               42)
+    bla = Name(String["d","e","n"])
+               
     println(string(bla))
 end
 
 function test_mutate()
-    bla = Name((["d", "e", "n"], ["l", "i", "u"]),
-               ["sfd", "Fsd"],
-               ["sdf", "sdf"],
-               42)
-    bla = Name(Array[["d", "e", "n"], ["l", "i", "u"]],
-               ["sfd", "Fsd"],
-               ["sdf", "sdf"],
-               42)
+   bla = Name(String["d","e","n"])
 
     mutate!(bla, .1)
+    mutate!(bla, .9)
     println(bla)
 end
 
 function test_mate()
+    bla = Name(String["d","e","n"])
+    bob = Name(String["p","a","t"])
+    println(string(mate(bob, bla))) 
+end
 
-    bob = Name(Array[["b", "e", "n"], ["t", "e", "e"]],
-               ["sfd", "Fsd"],
-               ["sdf", "sdf"],
-               42)
-
-    bla = Name(Array[["f", "o", "d"], ["p", "l", ""]],
-               ["sfd", "Fsd"],
-               ["sdf", "sdf"],
-               42)
-
-    println(mate(bob, bla)) 
+function test_history()
+    bla = Name(String["d","e","n"])
+    bob = Name(String["p","a","t"])
+    sd = (mate(bob, bla))
+    println(sd)
+    sdf = Name(String["o","b","i"])
+    println(mate(sd, sdf))
 end
 
 test_string()
 test_mutate()
 test_mate()
+test_history()

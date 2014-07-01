@@ -8,13 +8,13 @@ import Base.length
 
 ## Name methods
 type Name
-    chromosomes
-    parents
-    history
+    chromosomes::Array{String}
+    parents::Array{String}
+    history::Array{String}
     fitness::Integer
 end
 
-Name(stuff) =  (stuff,
+Name(stuff) =  Name(stuff,
                 String[],
                 String[],
                 0)
@@ -24,50 +24,57 @@ function mutate!(name::Name, probability::FloatingPoint)
     vowels = "aeiouy"
     consonants = "bcdfghjklmnpqrstvwxyz"
     for ii in 1:length(name.chromosomes)
-        for jj in 1:length(name.chromosomes[ii])
-            if rand() < probability
-                name.chromosomes[ii][jj] = randbool() ? Base.string(letters[rand(1:end)]) : ""
-                println("Mutation.")
-            end
+        if rand() < probability
+            name.chromosomes[ii] = randbool() ? Base.string(letters[rand(1:end)]) : ""
+            println("Mutation.")
         end
     end
 end
 
-function mate(left::Name, right::Name)
-    result = Array(Array{String})
-    smaller_name = left
-    other_name = right
-    if length(right) < length()
-        smaller_name, other_name = right, left
+## function mate(left::Name, right::Name)
+##     result = Array(Array{String})
+##     smaller_name = left
+##     other_name = right
+##     if length(right) < length()
+##         smaller_name, other_name = right, left
+##     end
+##     while length(smaller_name) <= length(other_name)
+##         push!(smaller_name.chromosomes, generate_syllable())
+##     end
+##     result[1] = ["", "", ""]
+##     while length(result) < length(left)
+##         push!(result, String["", "", ""])
+##     end
+##     for ii in 1:length(left.chromosomes)
+##         for jj in 1:length(left.chromosomes[ii])
+##             chosen = randbool() ? left : right
+##             result[ii][jj] = chosen[ii][jj]
+##             end
+##         end
+##     end
+##     return Name(result)
+## end
+
+function mate(mates::Name...)
+    result = Array(String, length(mates[1].chromosomes))
+    for ii in 1:length(result)
+        result[ii] = mates[rand(1:end)].chromosomes[ii]
     end
-    while length(smaller_name) <= length(other_name)
-        push!(smaller_name.chromosomes, generate_syllable())
-    end
-    result[1] = ["", "", ""]
-    while length(result) < length(left)
-        push!(result, String["", "", ""])
-    end
-    for ii in 1:length(left.chromosomes)
-        for jj in 1:length(left.chromosomes[ii])
-            chosen = randbool() ? left : right
-            result[ii][jj] = chosen[ii][jj]
-            end
-        end
-    end
-    return Name(result)
+    random_parent = mates[rand(1:end)]
+    return Name(result,
+                String[string(mate) for mate in mates],
+                push!(deepcopy(random_parent.history), string(random_parent)),
+                0)
 end
 
+
+## Name utility methods.
 function length(name::Name)
-    return Base.length(name.chromosomes)
+    return (name.chromosomes)
 end
 
 function string(name::Name)
-    result = String[]
-
-    for chromosome in name.chromosomes
-        push!(result, join(chromosome))
-    end
-    return join(result, " ")
+    return Base.string(join(name.chromosomes))
 end
 
 ## Static methods
