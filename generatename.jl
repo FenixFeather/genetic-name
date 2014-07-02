@@ -61,7 +61,7 @@ end
 function mate(mates::FullName...)
     result = Array(Name, length(mates[1]))
     for ii in 1:length(result)
-        result[ii] = mate([getindex(parent, ii) for parent in mates])            
+        result[ii] = mate([getindex(parent, ii) for parent in mates]...)            
     end
     return FullName(result)
 end
@@ -169,13 +169,18 @@ function generation!(population::Array{FullName, 1}, mate_size::Integer)
     ## @param population The array containing all the FullNames.
     ## @param mate_size The number of participants in each mating (parents per children).
     shuffle!(population)
-    children = Array(FullName, length(population)/mate_size)
-    for ii in 1:mate_size:length(population)
+    children = Array(FullName, itrunc(length(population)/mate_size))
+    println(length(children))
+    println(length(1:mate_size:length(children)))
+    for (jj,ii) in enumerate(1:mate_size:length(population))
         parents = population[ii:ii + mate_size - 1]
-        child = mate(parents)
-        children[ii] = child
+        child = mate(parents...)
+        println(child)
+        children[jj] = child
     end
+    
     population = vcat(population, children)
+    return population
 end
 
 function generate_population(size::Integer,name_lengths::Array{Int, 1})

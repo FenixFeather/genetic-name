@@ -16,7 +16,8 @@ test_fitness_characters,
 test_same_type,
 test_fitness,
 test_generate_population,
-test_update_population
+test_update_population,
+test_generation
 
 function setup(env::Dict{String,Any})
     env["fixtures"] = Dict{String,Any}()
@@ -28,12 +29,14 @@ end
 include("generatename.jl")
 
 function test_string(env::Dict{String,Any})
+    println("--------------------------------")
     bla = Name(String["d","e","n"])
     println(string(bla))
     @assert_true string(bla) == "den"
 end
 
 function test_mutate(env::Dict{String,Any})
+    println("--------------------------------")
     bla = Name(String["d","e","n"])
 
     mutate!(bla, .1)
@@ -43,6 +46,7 @@ function test_mutate(env::Dict{String,Any})
 end
 
 function test_mate(env::Dict{String,Any})
+    println("--------------------------------")
     bla = Name(String["d","e","n"])
     bob = Name(String["p","a","t"])
     println(string(mate(bob, bla)))
@@ -51,6 +55,7 @@ function test_mate(env::Dict{String,Any})
 end
 
 function test_history(env::Dict{String,Any})
+    println("--------------------------------")
     bla = Name(String["d","e","n"])
     bob = Name(String["p","a","t"])
     sd = (mate(bob, bla))
@@ -61,6 +66,7 @@ function test_history(env::Dict{String,Any})
 end
 
 function test_fitness_strings(env::Dict{String, Any})
+    println("--------------------------------")
     bla = Name(String["d","e","n"])
     bob = Name(String["p","a","t"])
     @assert_true fitness_strings(bla, bla) == 3
@@ -68,6 +74,7 @@ function test_fitness_strings(env::Dict{String, Any})
 end
 
 function test_fitness_shared(env::Dict{String, Any})
+    println("--------------------------------")
     bla = Name(String["d","e","n"])
     bob = Name(String["p","a","t"])
     poe = Name(String["e","b","c"])
@@ -76,6 +83,7 @@ function test_fitness_shared(env::Dict{String, Any})
 end
 
 function test_fitness_characters(env::Dict{String, Any})
+    println("--------------------------------")
     bla = Name(String["d","e","n",""])
     bob = Name(String["p","a","t",""])
     moe = Name(String["e","b","c","f"])
@@ -85,6 +93,7 @@ function test_fitness_characters(env::Dict{String, Any})
 end
 
 function test_same_type(env::Dict{String, Any})
+    println("--------------------------------")
     A = "a"
     B = "e"
     
@@ -93,12 +102,14 @@ function test_same_type(env::Dict{String, Any})
 end
 
 function test_fitness(env::Dict{String,Any})
+    println("--------------------------------")
     bla = Name(String["d","e","n"])
 
     @assert_true fitness(bla, bla) == 12
 end
 
 function test_generate_population(env::Dict{String, Any})
+    println("--------------------------------")
     pop = generate_population(5, [4,4])
     println(pop)
     ## for name in pop
@@ -109,6 +120,7 @@ function test_generate_population(env::Dict{String, Any})
 end
 
 function test_update_population(env::Dict{String, Any})
+    println("--------------------------------")
     pop = generate_population(5, [3,3])
     update_population_fitness!(pop,pop[1])
     top = deepcopy(pop[1])
@@ -120,6 +132,23 @@ function test_update_population(env::Dict{String, Any})
     end
     
     @assert_true string(pop[1]) == string(top)
+end
+
+function test_generation(env::Dict{String, Any})
+    println("--------------------------------")
+    pop = generate_population(6, [3,3])
+    for name in pop
+        println("$(string(name))\t$(name.fitness)")
+    end
+    top = deepcopy(pop[1])
+    println(string(top))
+    pop = generation!(pop, 2)
+    
+    for name in pop
+        println("$(string(name))\t$(name.fitness)")
+    end
+    
+    @assert_true in(string(top),[string(name) for name in pop])
 end
 
 end
