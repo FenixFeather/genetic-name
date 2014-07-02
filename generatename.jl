@@ -182,6 +182,16 @@ function reproduce!(population::Array{FullName, 1}, mate_size::Integer)
     return population
 end
 
+function evolve!(population::Array{FullName, 1}, to_keep::Integer, standard::FullName)
+    ## Sort everybody by fitness and get rid of the ones that aren't fit :(
+    ## @param population Array of names to operate on.
+    ## @param to_keep Number of names to keep.
+    ## @param standard The name everyone should strive to be.
+    sort!(population, rev=true)
+    population = population[1:to_keep]
+    return population
+end
+
 function generate_population(size::Integer,name_lengths::Array{Int, 1})
     ## Create a new population.
     ## @param size The number of things in the population.

@@ -17,7 +17,8 @@ test_same_type,
 test_fitness,
 test_generate_population,
 test_update_population,
-test_generation
+test_generation,
+test_evolve
 
 function setup(env::Dict{String,Any})
     env["fixtures"] = Dict{String,Any}()
@@ -149,6 +150,28 @@ function test_generation(env::Dict{String, Any})
     end
     
     @assert_true in(string(top),[string(name) for name in pop])
+end
+
+function test_evolve(env::Dict{String, Any})
+    println("--------------------------------")
+    println("evolution")
+    pop = generate_population(6, [3,3])
+    top = deepcopy(pop[1])
+    
+    update_population_fitness!(pop, top)
+    
+    for name in pop
+        println("$(string(name))\t$(name.fitness)")
+    end
+
+    println("Evolving.")
+    pop = evolve!(pop,3,top)
+    
+    for name in pop
+        println("$(string(name))\t$(name.fitness)")
+    end
+
+    @assert_true in(string(top), [string(name) for name in pop])
 end
 
 end
