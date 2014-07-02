@@ -15,7 +15,8 @@ test_fitness_shared,
 test_fitness_characters,
 test_same_type,
 test_fitness,
-test_generate_population
+test_generate_population,
+test_update_population
 
 function setup(env::Dict{String,Any})
     env["fixtures"] = Dict{String,Any}()
@@ -100,12 +101,27 @@ end
 function test_generate_population(env::Dict{String, Any})
     pop = generate_population(5, [4,4])
     println(pop)
-    for name in pop
-        println(string(name))
-    end
+    ## for name in pop
+    ##     println(string(name))
+    ## end
     @assert_true length(pop) == 5
     @assert_true length(pop[1][1]) == 12
 end
+
+function test_update_population(env::Dict{String, Any})
+    pop = generate_population(5, [3,3])
+    update_population_fitness!(pop,pop[1])
+    top = deepcopy(pop[1])
+    println(pop)
+    @assert_true pop[1].fitness > 40
+    sort!(pop,rev=true)
+    for name in pop
+        println("$(string(name))\t$(name.fitness)")
+    end
+    
+    @assert_true string(pop[1]) == string(top)
+end
+
 end
 
 using UnitTest

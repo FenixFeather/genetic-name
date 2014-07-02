@@ -6,6 +6,7 @@
 using ArgParse
 import Base.length
 import Base.string
+import Base.isless
 using Debug
 
 ## Name methods
@@ -66,7 +67,23 @@ function mate(mates::FullName...)
 end
 
 ## Fitness functions
-function fitness(name::FullName)
+function update_fitness!(name::Name, standard::Name)
+    name.fitness = fitness(name, standard)
+end
+
+function update_fitness!(name::FullName, standard::FullName)
+    for ii in 1:length(name)
+        ## Iterate through the full name.
+        update_fitness!(name[ii], standard[ii])
+    end
+    name.fitness = sum([subname.fitness for subname in name.names])
+end
+
+function update_population_fitness!(population::Array{FullName}, standard::FullName)
+    for ii in 1:length(population)
+        update_fitness!(population[ii], standard)
+    end
+end
     
 function fitness(name::Name, standard::Name)
     ## Calculate the fitness of a name compared to a standard.
@@ -136,6 +153,14 @@ end
 
 function getindex(name::FullName, index::Integer)
     return name.names[index]
+end
+
+function isless(left::Name, right::Name)
+    return left.fitness < right.fitness
+end
+
+function isless(left::FullName, right::FullName)
+    return left.fitness < right.fitness
 end
 
 ## Static methods
