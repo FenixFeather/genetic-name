@@ -3,7 +3,7 @@
 
 module InputStuff
 
-export input, input_int, input_choose
+export input, input_int, input_choose, sample
 
 function input(prompt::String="")
     print(prompt)
@@ -52,5 +52,21 @@ function input_choose(choices::Array, prompt::String="", list_choices=true)
     end
     return index
 end
-    
+
+function sample(population::Array, sample_size::Integer, replace::Bool)
+    sampled = Set{Integer}()
+    result = Array(typeof(population[1]), sample_size)
+    for ii in 1:sample_size
+        while true
+            next_index = rand(1:length(population))
+            if replace || !in(next_index,sampled)
+                push!(sampled, next_index)
+                result[ii] = population[next_index]
+                break
+            end
+        end
+    end
+    return result
+end
+
 end
