@@ -5,6 +5,7 @@
 
 using ArgParse
 import Base.length
+using Debug
 
 ## Name methods
 type Name
@@ -107,23 +108,23 @@ end
 function same_type(s1::String, s2::String)
     ## Determines if both characters are vowels, consonants, or empty strings
     vowels = "aeiouy"
-    if s1 == s2
-        return 1
-    elseif contains(vowels, s1[1]) && contains(vowels, s2[1])
-        return 1
-    elseif s1[1] != "" && s2[1] != ""
-        return 1
+    if s1 == "" || s2 == ""
+        return false
     end
-    return 0
+    return contains(vowels, s1) == contains(vowels, s2)
 end
 
 ## Name utility methods.
 function length(name::Name)
-    return (name.chromosomes)
+    return Base.length(name.chromosomes)
 end
 
 function string(name::Name)
     return Base.string(join(name.chromosomes))
+end
+
+function getindex(name::Name, index::Integer)
+    return name.chromosomes[index]
 end
 
 ## Static methods

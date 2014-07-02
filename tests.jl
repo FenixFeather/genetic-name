@@ -7,12 +7,13 @@ module Tests
 using UnitTest
 
 export test_string,
-test_mutate,
-test_mate,
-test_history,
-test_fitness_strings,
-test_fitness_shared,
+## test_mutate,
+## test_mate,
+## test_history,
+## test_fitness_strings,
+## test_fitness_shared,
 test_fitness_characters,
+test_same_type,
 test_fitness
 
 function setup(env::Dict{String,Any})
@@ -77,13 +78,22 @@ function test_fitness_characters(env::Dict{String, Any})
     bob = Name(String["p","a","t",""])
     moe = Name(String["e","b","c","f"])
     @assert_true fitness_characters(bla, bob) == 5
+    println(fitness_characters(bla, moe))
     @assert_true fitness_characters(bla, moe) == 1
+end
+
+function test_same_type(env::Dict{String, Any})
+    A = "a"
+    B = "e"
+    
+    @assert_true same_type(A, B)
+    @assert_true same_type("c", "d")
 end
 
 function test_fitness(env::Dict{String,Any})
     bla = Name(String["d","e","n"])
 
-    @assert_true fitness(bla, bla) == 9
+    @assert_true fitness(bla, bla) == 12
 end
 end
 
