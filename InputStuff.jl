@@ -33,6 +33,29 @@ function input_int(prompt::String="",natural::Bool=false)
     return result
 end
 
+function input_number(prompt::String="", left::Number=0, right::Number=0)
+    result = 0
+    while true
+        try
+            print(prompt)
+            stuff = strip(chomp(readline()))
+            result = parsefloat(stuff)
+            if left != right && !(left <= result <= rightn)
+                throw(DomainError())
+            end
+            break
+        catch e
+            if isa(e, DomainError)
+                println("Not between $(left) and $(right).")
+            else
+                println("Not a valid number.")
+            end
+            continue
+        end
+    end
+    return result
+end
+
 function input_choose(choices::Array, prompt::String="", list_choices=true)
     if list_choices
         for (index,choice) in enumerate(choices)
