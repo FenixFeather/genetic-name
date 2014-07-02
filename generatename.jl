@@ -2,7 +2,6 @@
 
 ## I had too much fun generating names.
 
-
 using ArgParse
 import Base.length
 import Base.string
