@@ -142,16 +142,8 @@ function generation!(population::Array{FullName, 1}, mate_size::Integer)
     population = vcat(population, children)
 end
 
-function generate_name(range)
-    vowels = "aeiouy"
-    consonants = "bcdfghjklmnpqrstvwxyz"
-    syllables = Array(String, rand(range))
-    for ii in 1:length(syllables)
-        syllables[ii] = string(randbool() ? consonants[rand(1:end)] : "",
-                          vowels[rand(1:end)],
-                          randbool() ? consonants[rand(1:end)] : "")
-    end
-    return ucfirst(string(syllables...))
+function generate_name(size::Integer,method::Function=generate_syllable)
+    return Name(vcat([method() for ii in 1:size]...))
 end
 
 function generate_syllable()
