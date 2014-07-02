@@ -169,12 +169,12 @@ function reproduce!(population::Array{FullName, 1}, mate_size::Integer)
     ## @param mate_size The number of participants in each mating (parents per children).
     shuffle!(population)
     children = Array(FullName, itrunc(length(population)/mate_size))
-    println(length(children))
-    println(length(1:mate_size:length(children)))
+    ## println(length(children))
+    ## println(length(1:mate_size:length(children)))
     for (jj,ii) in enumerate(1:mate_size:length(population))
         parents = population[ii:ii + mate_size - 1]
         child = mate(parents...)
-        println(child)
+        ## println(child)
         children[jj] = child
     end
     
