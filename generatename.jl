@@ -32,30 +32,6 @@ function mutate!(name::Name, probability::FloatingPoint)
     end
 end
 
-## function mate(left::Name, right::Name)
-##     result = Array(Array{String})
-##     smaller_name = left
-##     other_name = right
-##     if length(right) < length()
-##         smaller_name, other_name = right, left
-##     end
-##     while length(smaller_name) <= length(other_name)
-##         push!(smaller_name.chromosomes, generate_syllable())
-##     end
-##     result[1] = ["", "", ""]
-##     while length(result) < length(left)
-##         push!(result, String["", "", ""])
-##     end
-##     for ii in 1:length(left.chromosomes)
-##         for jj in 1:length(left.chromosomes[ii])
-##             chosen = randbool() ? left : right
-##             result[ii][jj] = chosen[ii][jj]
-##             end
-##         end
-##     end
-##     return Name(result)
-## end
-
 function mate(mates::Name...)
     result = Array(String, length(mates[1].chromosomes))
     for ii in 1:length(result)

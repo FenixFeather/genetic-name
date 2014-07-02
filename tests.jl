@@ -7,11 +7,11 @@ module Tests
 using UnitTest
 
 export test_string,
-## test_mutate,
-## test_mate,
-## test_history,
-## test_fitness_strings,
-## test_fitness_shared,
+test_mutate,
+test_mate,
+test_history,
+test_fitness_strings,
+test_fitness_shared,
 test_fitness_characters,
 test_same_type,
 test_fitness
@@ -111,8 +111,3 @@ function main()
 end
 
 main()
-
-## test_string()
-## test_mutate()
-## test_mate()
-## test_history()
