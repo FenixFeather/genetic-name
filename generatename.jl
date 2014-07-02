@@ -15,6 +15,10 @@ type Name
     fitness::Integer
 end
 
+type FullName
+    names::Array{Name}
+end
+
 Name(stuff) =  Name(stuff,
                 String[],
                 String[],
@@ -42,6 +46,14 @@ function mate(mates::Name...)
                 String[string(mate) for mate in mates],
                 push!(deepcopy(random_parent.history), string(random_parent)),
                 0)
+end
+
+function mate(mates::FullName...)
+    result = Array(Name, length(mates[1]))
+    for ii in 1:length(result)
+        result[ii] = mate([getindex(parent, ii) for parent in mates])            
+    end
+    return FullName(result)
 end
 
 ## Fitness functions
@@ -95,15 +107,41 @@ function length(name::Name)
     return Base.length(name.chromosomes)
 end
 
+function length(name::FullName)
+    return Base.length(name.names)
+end
+    
 function string(name::Name)
     return Base.string(join(name.chromosomes))
+end
+
+function string(name::FullName)
+    return join(name.names, " ")
 end
 
 function getindex(name::Name, index::Integer)
     return name.chromosomes[index]
 end
 
+function getindex(name::FullName, index::Integer)
+    return name.names[index]
+end
+
 ## Static methods
+function generation!(population::Array{FullName, 1}, mate_size::Integer)
+    ## Populate the population array with new children.
+    ## @param population The array containing all the FullNames.
+    ## @param mate_size The number of participants in each mating (parents per children).
+    shuffle!(population)
+    children = Array(FullName, length(population)/mate_size)
+    for ii in 1:mate_size:length(population)
+        parents = population[ii:ii + mate_size - 1]
+        child = mate(parents)
+        children[ii] = child
+    end
+    population = vcat(population, children)
+end
+
 function generate_name(range)
     vowels = "aeiouy"
     consonants = "bcdfghjklmnpqrstvwxyz"
