@@ -58,7 +58,7 @@ end
 
 ## Fitness functions
 function fitness(name::Name, standard::Name)
-    ## Calculates the fitness of a name compared to a standard.
+    ## Calculate the fitness of a name compared to a standard.
     ## @param name The name being evaluated.
     ## @param standard The name to be used for evaluating fitness.
     fitness_functions = Function[fitness_strings,
@@ -69,19 +69,19 @@ function fitness(name::Name, standard::Name)
 end
 
 function fitness_strings(name::Name, standard::Name)
-    ## Tests that the strings produced by the names match.
+    ## Test that the strings produced by the names match.
     return string(name) == string(standard) ? length(name) : 0
 end
 
 function fitness_shared(name::Name, standard::Name)
-    ## Tests how many characters the two names have in common.
+    ## Test how many characters the two names have in common.
     name_set = Set(name.chromosomes...)
     standard_set = Set(standard.chromosomes...)
     return length(intersect(name_set, standard_set))
 end
 
 function fitness_characters(name::Name, standard::Name)
-    ## Tests that the characters match or are of the same type.
+    ## Test that the characters match or are of the same type.
     total = 0
     for ii in 1:length(name)
         if name[ii] == standard[ii]
@@ -94,7 +94,7 @@ function fitness_characters(name::Name, standard::Name)
 end
 
 function same_type(s1::String, s2::String)
-    ## Determines if both characters are vowels, consonants, or empty strings
+    ## Determine if both characters are vowels, consonants, or empty strings.
     vowels = "aeiouy"
     if s1 == "" || s2 == ""
         return false
