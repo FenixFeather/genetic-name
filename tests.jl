@@ -142,7 +142,7 @@ function test_generation(env::Dict{String, Any})
     end
     top = deepcopy(pop[1])
     println(string(top))
-    pop = generation!(pop, 2)
+    pop = reproduce!(pop, 2)
     
     for name in pop
         println("$(string(name))\t$(name.fitness)")

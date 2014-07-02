@@ -163,7 +163,7 @@ function isless(left::FullName, right::FullName)
 end
 
 ## Static methods
-function generation!(population::Array{FullName, 1}, mate_size::Integer)
+function reproduce!(population::Array{FullName, 1}, mate_size::Integer)
     ## Populate the population array with new children.
     ## @param population The array containing all the FullNames.
     ## @param mate_size The number of participants in each mating (parents per children).
