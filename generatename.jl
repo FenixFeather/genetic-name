@@ -5,6 +5,7 @@
 
 using ArgParse
 import Base.length
+import Base.string
 using Debug
 
 ## Name methods
@@ -17,12 +18,16 @@ end
 
 type FullName
     names::Array{Name}
+    fitness::Integer
 end
 
-Name(stuff) =  Name(stuff,
-                String[],
-                String[],
-                0)
+## Constructors
+Name(stuff::Array{String}) =  Name(stuff,
+                                   String[],
+                                   String[],
+                                   0)
+
+FullName(stuff::Array{Name}) = FullName(stuff, 0)
 
 function mutate!(name::Name, probability::FloatingPoint)
     letters = "abcdefghijklmnopqrstuvwxyz"
@@ -34,6 +39,10 @@ function mutate!(name::Name, probability::FloatingPoint)
             println("Mutation.")
         end
     end
+end
+
+function mate()
+    return nothing
 end
 
 function mate(mates::Name...)
@@ -57,6 +66,8 @@ function mate(mates::FullName...)
 end
 
 ## Fitness functions
+function fitness(name::FullName)
+    
 function fitness(name::Name, standard::Name)
     ## Calculate the fitness of a name compared to a standard.
     ## @param name The name being evaluated.
@@ -116,7 +127,7 @@ function string(name::Name)
 end
 
 function string(name::FullName)
-    return join(name.names, " ")
+    return join([ucfirst(string(word)) for word in name.names], " ")
 end
 
 function getindex(name::Name, index::Integer)
@@ -142,6 +153,20 @@ function generation!(population::Array{FullName, 1}, mate_size::Integer)
     population = vcat(population, children)
 end
 
+function generate_population(size::Integer,name_lengths::Array{Int, 1})
+    ## Create a new population.
+    ## @param size The number of things in the population.
+    ## @param name_lengths An array that describes how many syllables each name should be.
+
+    population = Array(FullName, size)
+
+    for ii in 1:size
+        population[ii] = FullName([generate_name(name_length) for name_length in name_lengths])
+    end
+
+    return population
+end
+
 function generate_name(size::Integer,method::Function=generate_syllable)
     return Name(vcat([method() for ii in 1:size]...))
 end
@@ -152,9 +177,11 @@ function generate_syllable()
     syllable = Array(String, 3)
     
     for ii in 1:length(syllable)
-        syllable[ii] = string(randbool() ? consonants[rand(1:end)] : "",
-                          vowels[rand(1:end)],
-                          randbool() ? consonants[rand(1:end)] : "")
+        if ii % 2 == 0
+            syllable[ii] = string(vowels[rand(1:end)])
+        else
+            syllable[ii] = string(randbool() ? consonants[rand(1:end)] : "")
+        end
     end
     return syllable
 end

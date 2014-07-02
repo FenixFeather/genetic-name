@@ -14,7 +14,8 @@ test_fitness_strings,
 test_fitness_shared,
 test_fitness_characters,
 test_same_type,
-test_fitness
+test_fitness,
+test_generate_population
 
 function setup(env::Dict{String,Any})
     env["fixtures"] = Dict{String,Any}()
@@ -94,6 +95,16 @@ function test_fitness(env::Dict{String,Any})
     bla = Name(String["d","e","n"])
 
     @assert_true fitness(bla, bla) == 12
+end
+
+function test_generate_population(env::Dict{String, Any})
+    pop = generate_population(5, [4,4])
+    println(pop)
+    for name in pop
+        println(string(name))
+    end
+    @assert_true length(pop) == 5
+    @assert_true length(pop[1][1]) == 12
 end
 end
 
