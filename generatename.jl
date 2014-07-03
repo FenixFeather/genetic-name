@@ -38,7 +38,7 @@ function mutate_population!(population::Array{FullName}, point_prob::FloatingPoi
                 point_mutate!(population[ii][jj], point_prob)
             end
             if swap_prob != 0.
-                swap_mutate!(population[ii][jj], swap_prop)
+                swap_mutate!(population[ii][jj], swap_prob)
             end
         end
     end
@@ -252,6 +252,7 @@ end
 function input_name(len::Integer)
     result = Array(String, len)
     for ii in 1:length(result)
+        println("Character $(ii)/$(length(result))")
         result[ii] = lowercase(input_string("Enter a character or enter for empty spot: ",
                                   x->length(x) <= 1,
                                   "Not a character."))

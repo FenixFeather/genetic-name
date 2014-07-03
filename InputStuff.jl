@@ -12,6 +12,11 @@ end
 
 function input_int(prompt::String="",natural::Bool=false,range::Range1=0:0)
     result = 0
+    
+    if range != 0:0
+        natural = false
+    end
+    
     while true
         try
             result = parseint(input(prompt))
