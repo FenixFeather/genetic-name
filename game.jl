@@ -22,7 +22,7 @@ function name_evolution()
     previous_customs = Dict{String, FullName}()
     
     for ii in 1:number_names
-        name_array[ii] = input_int("How many syllables for name $(ii)?",true)
+        name_array[ii] = input_int("Max syllables for name $(ii): ",true)
     end
     
     while true
@@ -53,27 +53,30 @@ function name_evolution()
     end
 
 
-    function save_population()
+    function save_population(arg)
         writedlm(input("File to save to: "),
                  [string(name) for name in population],
                  '\n')
     end
 
-    function next_generation()
+    function next_generation(arg::Integer)
         sample_size = input_int("Sample size: ", false,1:length(population))
         the_sample = sample(population,sample_size,false)
         standard = the_sample[input_choose(the_sample,"Pick a name: ")]
 
         print("Reproducing...")
-        population = reproduce!(population, mate_size)
-        population = mutate_population!(population,point_prob,swap_prob)
-        println("Done.")
+        for ii in 1:arg
+            population = reproduce!(population, mate_size)
+            population = mutate_population!(population,point_prob,swap_prob)
         
-        update_population_fitness!(population,standard)
-        population = evolve!(population, size, standard)
+        
+            update_population_fitness!(population,standard)
+            population = evolve!(population, size, standard)
+        end
+        println("Done.")
     end
 
-    function next_generation_custom()
+    function next_generation_custom(arg::Integer)
         standard = population[1]
 
         options = ["Population index", "Custom name", "Previous custom names"]
@@ -111,20 +114,24 @@ function name_evolution()
         end
 
         print("Reproducing...")
-        population = reproduce!(population, mate_size)
-        population = mutate_population!(population,point_prob,swap_prob)
-        println("Done.")
+        for ii in 1:arg
+            population = reproduce!(population, mate_size)
+            population = mutate_population!(population,point_prob,swap_prob)
+            
 
-        update_population_fitness!(population,standard)
-        population = evolve!(population, size, standard)
+            update_population_fitness!(population,standard)
+            population = evolve!(population, size, standard)
+        end
+        println("Done.")
     end
 
-    function show_top()
-        wanted = input_int("How many? ",false,1:length(population))
+    function show_top(arg::Integer)
+        ## wanted = input_int("How many? ",false,1:length(population))
+        wanted = arg
         output_list([string(name) for name in population[1:wanted]])
     end
 
-    function show_history()
+    function show_history(arg)
         wanted = input_int("Which name (enter number according to top)? ",false,1:length(population))
         for (ii,name) in enumerate(population[wanted].names)
             println("History of subname $(ii):")
@@ -132,8 +139,13 @@ function name_evolution()
         end
     end
     
-    function not_found()
+    function not_found(arg=3)
         println("Command not found.")
+    end
+
+    function finish(arg)
+        println("Goodbye.")
+        quit()
     end
 
     cmd_dict = Dict{String,Function}()
@@ -144,12 +156,20 @@ function name_evolution()
                 "nextc"=>next_generation_custom,
                 "history"=>show_history,
                 "top"=>show_top,
-                "quit"=>quit
+                "quit"=>finish
                 ]
     population = generate_population(size, name_array)
     
     while true
-        get(cmd_dict, input("> "), not_found)()
+        try
+            stuff = split(input("> "))
+            cmd = stuff[1]
+            arg = length(stuff) > 1 ? parseint(stuff[2]) : 1
+            get(cmd_dict, cmd, not_found)(arg)
+        catch e
+            not_found()
+            throw(e)
+        end
     end
 end
 

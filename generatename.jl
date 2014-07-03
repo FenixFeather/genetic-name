@@ -75,10 +75,12 @@ function mate(mates::Name...)
         result[ii] = mates[rand(1:end)].chromosomes[ii]
     end
     random_parent = mates[rand(1:end)]
-    return Name(result,
-                String[string(mate) for mate in mates],
-                push!(deepcopy(random_parent.history), string(random_parent)),
-                0)
+    child = Name(result,
+         String[string(mate) for mate in mates],
+         deepcopy(random_parent.history),
+         0)
+    push!(child.history, string(random_parent))
+    return child
 end
 
 function mate(mates::FullName...)
