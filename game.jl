@@ -18,6 +18,8 @@ function name_evolution()
                  "High"=>0.1,
                  "Custom"=>4.2
                  ]
+
+    previous_customs = Dict{String, FullName}()
     
     for ii in 1:number_names
         name_array[ii] = input_int("How many syllables for name $(ii)?",true)
@@ -58,29 +60,60 @@ function name_evolution()
     end
 
     function next_generation()
-        population = reproduce!(population, mate_size)
-        population = mutate_population!(population,point_prob,swap_prob)
-        
         sample_size = input_int("Sample size: ", false,1:length(population))
         the_sample = sample(population,sample_size,false)
         standard = the_sample[input_choose(the_sample,"Pick a name: ")]
+
+        print("Reproducing...")
+        population = reproduce!(population, mate_size)
+        population = mutate_population!(population,point_prob,swap_prob)
+        println("Done.")
         
         update_population_fitness!(population,standard)
         population = evolve!(population, size, standard)
     end
 
     function next_generation_custom()
+        standard = population[1]
+
+        options = ["Population index", "Custom name", "Previous custom names"]
+
+        while true
+            option = input_choose(options, "Which type of custom name? ")
+
+            if option == 1
+                wanted = input_int("Which name (enter number according to top)? ",false,1:length(population))
+                println(string(population[wanted]))
+                standard = population[wanted]
+                break
+            elseif option == 2
+                subnames = Array(Name, length(population[1]))
+
+                for ii in 1:length(subnames)
+                    println("Enter characters for subname $(ii).")
+                    subnames[ii] = input_name(length(population[1][ii]))
+                end
+                
+                standard = FullName(subnames)
+
+                previous_customs[string(standard)] = deepcopy(standard)
+                
+                break
+            elseif option == 3 && !isempty(previous_customs)
+                more_options = collect(keys(previous_customs))
+                wanted = input_choose(more_options, "Pick one: ")
+                standard = previous_customs[more_options[wanted]]
+                break
+            else
+                println("No previous names.")
+                continue
+            end
+        end
+
+        print("Reproducing...")
         population = reproduce!(population, mate_size)
         population = mutate_population!(population,point_prob,swap_prob)
-
-        subnames = Array(Name, length(population[1]))
-
-        for ii in 1:length(subnames)
-            println("Enter characters for subname $(ii).")
-            subnames[ii] = input_name(length(population[1][ii]))
-        end
-        
-        standard = FullName(subnames)
+        println("Done.")
 
         update_population_fitness!(population,standard)
         population = evolve!(population, size, standard)
@@ -88,7 +121,7 @@ function name_evolution()
 
     function show_top()
         wanted = input_int("How many? ",false,1:length(population))
-        println([string(name) for name in population[1:wanted]])
+        output_list([string(name) for name in population[1:wanted]])
     end
 
     function show_history()
