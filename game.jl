@@ -5,6 +5,7 @@ include("InputStuff.jl")
 using InputStuff
 
 function name_evolution()
+    print_with_color(:green,"Welcome to the genetic name simulator.\n")
     size = input_int("Population size: ",true)
     mate_size = 0
 
@@ -159,6 +160,7 @@ function name_evolution()
             println("Invalid argument.")
         else
             println("Command not found.")
+            println("Type 'help' to see the commands.")
         end
     end
 
@@ -167,25 +169,46 @@ function name_evolution()
         quit()
     end
 
+    function helpme(arg)
+        println("--------------------------------")
+        println("These are the commands you can use. Most of these commands can take a numerical argument, allowing that command to be repeated. For example, 'next 10' would simulate 10 generations, while 'nuke 10' would deploy 10 nukes in a row.")
+        println("--------------------------------")
+        for cmd in sort(collect(keys(cmd_dict)))
+            println("\t$(cmd) - $(cmd_dict[cmd][2])")
+        end
+    end
+
     cmd_dict = Dict{String,Function}()
 
     cmd_dict = [
-                "save"=>save_population,
-                "next"=>next_generation,
-                "nextc"=>next_generation_custom,
-                "history"=>show_history,
-                "top"=>show_top,
-                "nuke"=>nuke,
-                "quit"=>finish
+                "save"=>(save_population,
+                         "Save the entire population to a file."),
+                "next"=>(next_generation,
+                         "Choose most fit name from random sample and simulate moving one generation forward."),
+                "nextc"=>(next_generation_custom,
+                          "Choose arbitrary name from population or input name as most fit and simulate one generation."),
+                "history"=>(show_history,
+                            "Show the history of a name."),
+                "top"=>(show_top,
+                        "Show the most fit member(s) of the population."),
+                "nuke"=>(nuke,
+                         "Deploy a nuclear device, causing massive damage to the genes of the names."),
+                "help"=>(helpme,
+                         "Get help."),
+                "quit"=>(finish,
+                         "Leave."),
                 ]
+    
     population = generate_population(size, name_array)
+
+    println("Type 'help' to see the commands.")
     
     while true
         try
             stuff = split(input("> "))
             cmd = stuff[1]
             arg = length(stuff) > 1 ? parseint(stuff[2]) : 1
-            get(cmd_dict, cmd, not_found)(arg)
+            get(cmd_dict, cmd, not_found)[1](arg)
         catch e
             not_found()
             if "-d" in ARGS
