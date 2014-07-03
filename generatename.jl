@@ -7,6 +7,8 @@ import Base.length
 import Base.string
 import Base.isless
 using Debug
+include("InputStuff.jl")
+using InputStuff
 
 ## Name methods
 type Name
@@ -245,6 +247,16 @@ function generate_syllable()
         end
     end
     return syllable
+end
+
+function input_name(len::Integer)
+    result = Array(String, len)
+    for ii in 1:length(result)
+        result[ii] = lowercase(input_string("Enter a character or enter for empty spot: ",
+                                  x->length(x) <= 1,
+                                  "Not a character."))
+    end
+    return Name(result)
 end
 
 function parsecmd()
