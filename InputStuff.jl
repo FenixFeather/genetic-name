@@ -19,7 +19,9 @@ function input_int(prompt::String="",natural::Bool=false,range::Range1=0:0)
                 (natural && result <= 1) ||
                 (range != 0:0 && !in(result, range))
                 )
-                println("Out of range.")
+                range_message = "Must be between $(range[1]) and $(range[end])."
+                natural_message = natural ? "Must be natural." : ""
+                println("Out of range. $(range != 0:0 ? range_message : natural_message)")
                 continue
             end
             break
@@ -36,7 +38,7 @@ function input_number(prompt::String="", left::Number=0, right::Number=0)
     while true
         try
             result = parsefloat(input(prompt))
-            if left != right && !(left <= result <= rightn)
+            if left != right && !(left <= result <= right)
                 throw(DomainError())
             end
             break
