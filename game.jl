@@ -139,6 +139,20 @@ function name_evolution()
             output_list(name.history)
         end
     end
+
+    function nuke(arg::Integer)
+        strengths = collect(keys(prob_dict))
+        strength = input_choose(choices, "Strength of nuke: ")
+        nuke_prob = 0.0
+        if prob_dict[strengths[strength]] > 1.0
+            nuke_prob = input_number("Enter percentage decimal: ", 0.0, 1.0)
+        else
+            nuke_prob = prob_dict[strengths[strength]] * 7
+        end
+        for ii in 1:arg
+            population = mutate_population!(population, nuke_prob, nuke_prob)
+        end
+    end
     
     function not_found(arg=-1)
         if arg == -1
@@ -161,6 +175,7 @@ function name_evolution()
                 "nextc"=>next_generation_custom,
                 "history"=>show_history,
                 "top"=>show_top,
+                "nuke"=>nuke,
                 "quit"=>finish
                 ]
     population = generate_population(size, name_array)
@@ -173,7 +188,9 @@ function name_evolution()
             get(cmd_dict, cmd, not_found)(arg)
         catch e
             not_found()
-            ## throw(e)
+            if "-d" in ARGS
+                throw(e)
+            end
         end
     end
 end

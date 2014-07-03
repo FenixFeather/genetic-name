@@ -3,7 +3,7 @@
 
 module InputStuff
 
-export input, input_int, input_string, input_choose, output_list, sample
+export input, input_int, input_string, input_choose, input_number, output_list, sample
 
 function input(prompt::String="")
     print(prompt)
