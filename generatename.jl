@@ -47,6 +47,7 @@ function point_mutate!(name::Name, probability::FloatingPoint)
     letters = "abcdefghijklmnopqrstuvwxyz"
     for ii in 1:length(name.chromosomes)
         if rand() < probability
+            push!(name.history,string(name))
             name.chromosomes[ii] = randbool() ? Base.string(letters[rand(1:end)]) : ""
             ## println("Mutation.")
         end
@@ -54,9 +55,12 @@ function point_mutate!(name::Name, probability::FloatingPoint)
 end
 
 function swap_mutate!(name::Name, probability::FloatingPoint)
-    left = rand(1:length(name))
-    right = rand(1:length(name))
-    name.chromosomes[left], name.chromosomes[right] = name.chromosomes[right], name.chromosomes[left]
+    if rand() < probability
+        push!(name.history,string(name))
+        left = rand(1:length(name))
+        right = rand(1:length(name))
+        name.chromosomes[left], name.chromosomes[right] = name.chromosomes[right], name.chromosomes[left]
+    end
 end
 
 function mate()
