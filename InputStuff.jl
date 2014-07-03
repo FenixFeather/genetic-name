@@ -3,7 +3,7 @@
 
 module InputStuff
 
-export input, input_int, input_choose, output_list, sample
+export input, input_int, input_string, input_choose, output_list, sample
 
 function input(prompt::String="")
     print(prompt)
@@ -54,6 +54,19 @@ function input_number(prompt::String="", left::Number=0, right::Number=0)
     end
     return result
 end
+
+function input_string(prompt::String="", validate_function::Function=x->true, e::String="Invalid.")
+    result = ""
+    while true
+        print(prompt)
+        result = strip(chomp(readline()))
+        if validate_function(result)
+            return result
+        end
+        println(e)
+    end
+end
+                
 
 function input_choose(choices::Array, prompt::String="", list_choices=true)
     if list_choices
