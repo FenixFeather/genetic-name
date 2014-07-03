@@ -3,30 +3,29 @@
 
 module InputStuff
 
-export input, input_int, input_choose, sample
+export input, input_int, input_choose, output_list, sample
 
 function input(prompt::String="")
     print(prompt)
     return chomp(readline())
 end
 
-function input_int(prompt::String="",natural::Bool=false)
+function input_int(prompt::String="",natural::Bool=false,range::Range1=0:0)
     result = 0
     while true
         try
             print(prompt)
             stuff = strip(chomp(readline()))
             result = parseint(stuff)
-            if natural && result <= 1
-                throw(DomainError())
+            if (
+                (natural && result <= 1) ||
+                (range != 0:0 && !in(result, range))
+                )
+                println("Out of range.")
             end
             break
         catch e
-            if isa(e, DomainError)
-                println("Not a natural number.")
-            else
-                println("Not an integer.")
-            end
+            println("Not an integer.")
             continue
         end
     end
@@ -58,9 +57,7 @@ end
 
 function input_choose(choices::Array, prompt::String="", list_choices=true)
     if list_choices
-        for (index,choice) in enumerate(choices)
-            println("$(index). $(string(choice))")
-        end
+        output_list(choices::Array)
     end
     index = 1
     while true
@@ -74,6 +71,12 @@ function input_choose(choices::Array, prompt::String="", list_choices=true)
         end
     end
     return index
+end
+
+function output_list(choices::Array)
+    for (index,choice) in enumerate(choices)
+        println("$(index). $(string(choice))")
+    end
 end
 
 function sample(population::Array, sample_size::Integer, replace::Bool)
