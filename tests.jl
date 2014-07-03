@@ -8,6 +8,8 @@ using UnitTest
 
 export test_string,
 test_mutate,
+test_swap_mutate,
+test_mutate_population,
 test_mate,
 test_history,
 test_fitness_strings,
@@ -40,12 +42,41 @@ function test_mutate(env::Dict{String,Any})
     println("--------------------------------")
     bla = Name(String["d","e","n"])
 
-    mutate!(bla, .1)
-    mutate!(bla, .9)
+    point_mutate!(bla, .1)
+    point_mutate!(bla, .9)
     println(bla)
     @assert_true isa(bla, Name)
 end
 
+function test_swap_mutate(env::Dict{String, Any})
+    bla = Name(String["d","e","n"])
+    bla_back = Name(String["d","e","n"])
+    println(string(bla))
+    swap_mutate!(bla, 1.0)
+    println(string(bla))
+    ## @assert_true Set(bla.chromosomes...) = Set(bla_back.chromosomes...)
+    @assert_true isa(bla, Name)
+end
+
+function test_mutate_population(env::Dict{String, Any})
+    println("--------------------------------")
+    pop = generate_population(6, [3,3])
+    top = deepcopy(pop)
+
+    for name in pop
+        println("$(string(name))\t$(name.fitness)")
+    end
+
+    println("Mutating.")
+    pop = mutate_population!(pop, 0.9)
+    
+    for name in pop
+        println("$(string(name))\t$(name.fitness)")
+    end
+
+    @assert_true top != pop
+
+end
 function test_mate(env::Dict{String,Any})
     println("--------------------------------")
     bla = Name(String["d","e","n"])

@@ -29,16 +29,30 @@ Name(stuff::Array{String}) =  Name(stuff,
 
 FullName(stuff::Array{Name}) = FullName(stuff, 0)
 
-function mutate!(name::Name, probability::FloatingPoint)
+function mutate_population!(population::Array{FullName}, point_prob::FloatingPoint=0., swap_prob::FloatingPoint=0.)
+    for ii in 1:length(population)
+        for jj in 1:length(population[ii])
+            point_mutate!(population[ii][jj], point_prob)
+            swap_mutate!(population[ii][jj], swap_prop)
+        end
+    end
+    return population
+end
+
+function point_mutate!(name::Name, probability::FloatingPoint)
     letters = "abcdefghijklmnopqrstuvwxyz"
-    vowels = "aeiouy"
-    consonants = "bcdfghjklmnpqrstvwxyz"
     for ii in 1:length(name.chromosomes)
         if rand() < probability
             name.chromosomes[ii] = randbool() ? Base.string(letters[rand(1:end)]) : ""
-            println("Mutation.")
+            ## println("Mutation.")
         end
     end
+end
+
+function swap_mutate!(name::Name, probability::FloatingPoint)
+    left = rand(1:length(name))
+    right = rand(1:length(name))
+    name.chromosomes[left], name.chromosomes[right] = name.chromosomes[right], name.chromosomes[left]
 end
 
 function mate()
