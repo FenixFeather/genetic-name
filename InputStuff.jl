@@ -14,14 +14,13 @@ function input_int(prompt::String="",natural::Bool=false,range::Range1=0:0)
     result = 0
     while true
         try
-            print(prompt)
-            stuff = strip(chomp(readline()))
-            result = parseint(stuff)
+            result = parseint(input(prompt))
             if (
                 (natural && result <= 1) ||
                 (range != 0:0 && !in(result, range))
                 )
                 println("Out of range.")
+                continue
             end
             break
         catch e
@@ -36,9 +35,7 @@ function input_number(prompt::String="", left::Number=0, right::Number=0)
     result = 0
     while true
         try
-            print(prompt)
-            stuff = strip(chomp(readline()))
-            result = parsefloat(stuff)
+            result = parsefloat(input(prompt))
             if left != right && !(left <= result <= rightn)
                 throw(DomainError())
             end
@@ -58,8 +55,7 @@ end
 function input_string(prompt::String="", validate_function::Function=x->true, e::String="Invalid.")
     result = ""
     while true
-        print(prompt)
-        result = strip(chomp(readline()))
+        result = input(prompt)
         if validate_function(result)
             return result
         end
