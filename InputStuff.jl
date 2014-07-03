@@ -21,7 +21,7 @@ function input_int(prompt::String="",natural::Bool=false,range::Range1=0:0)
         try
             result = parseint(input(prompt))
             if (
-                (natural && result <= 1) ||
+                (natural && result < 1) ||
                 (range != 0:0 && !in(result, range))
                 )
                 range_message = "Must be between $(range[1]) and $(range[end])."
