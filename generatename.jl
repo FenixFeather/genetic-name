@@ -32,8 +32,12 @@ FullName(stuff::Array{Name}) = FullName(stuff, 0)
 function mutate_population!(population::Array{FullName}, point_prob::FloatingPoint=0., swap_prob::FloatingPoint=0.)
     for ii in 1:length(population)
         for jj in 1:length(population[ii])
-            point_mutate!(population[ii][jj], point_prob)
-            swap_mutate!(population[ii][jj], swap_prop)
+            if point_prob != 0.
+                point_mutate!(population[ii][jj], point_prob)
+            end
+            if swap_prob != 0.
+                swap_mutate!(population[ii][jj], swap_prop)
+            end
         end
     end
     return population
