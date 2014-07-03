@@ -79,7 +79,10 @@ function mate(mates::Name...)
          String[string(mate) for mate in mates],
          deepcopy(random_parent.history),
          0)
+    ## println(child.history)
+    ## println(random_parent)
     push!(child.history, string(random_parent))
+    ## println(child.history)
     return child
 end
 

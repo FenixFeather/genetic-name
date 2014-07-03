@@ -133,14 +133,19 @@ function name_evolution()
 
     function show_history(arg)
         wanted = input_int("Which name (enter number according to top)? ",false,1:length(population))
+        println(string(population[wanted]))
         for (ii,name) in enumerate(population[wanted].names)
             println("History of subname $(ii):")
             output_list(name.history)
         end
     end
     
-    function not_found(arg=3)
-        println("Command not found.")
+    function not_found(arg=-1)
+        if arg == -1
+            println("Invalid argument.")
+        else
+            println("Command not found.")
+        end
     end
 
     function finish(arg)
@@ -168,7 +173,7 @@ function name_evolution()
             get(cmd_dict, cmd, not_found)(arg)
         catch e
             not_found()
-            throw(e)
+            ## throw(e)
         end
     end
 end

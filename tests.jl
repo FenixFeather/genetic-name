@@ -81,8 +81,9 @@ function test_mate(env::Dict{String,Any})
     println("--------------------------------")
     bla = Name(String["d","e","n"])
     bob = Name(String["p","a","t"])
-    println(string(mate(bob, bla)))
-
+    child = mate(bob, bla)
+    println(string(child))
+    println(child)
     @assert_true isa(bla, Name)
 end
 
@@ -94,6 +95,10 @@ function test_history(env::Dict{String,Any})
     println(sd)
     sdf = Name(String["o","b","i"])
     println(mate(sd, sdf))
+
+    A = FullName([bla, bob])
+    B = FullName([bob, sd])
+    println(mate(A,B))
     @assert_true isa(bla, Name)
 end
 
