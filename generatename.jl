@@ -131,8 +131,8 @@ end
 
 function fitness_shared(name::Name, standard::Name)
     ## Test how many characters the two names have in common.
-    name_set = Set(name.chromosomes...)
-    standard_set = Set(standard.chromosomes...)
+    name_set = Set(name.chromosomes)
+    standard_set = Set(standard.chromosomes)
     return length(intersect(name_set, standard_set))
 end
 
