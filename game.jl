@@ -9,6 +9,8 @@ function name_evolution()
     size = input_int("Population size: ",true)
     mate_size = 0
 
+    generation = 0
+
     number_names = input_int("How many subnames per name? ",true)
 
     name_array = Array(Int, number_names)
@@ -75,6 +77,7 @@ function name_evolution()
             population = evolve!(population, size, standard)
         end
         println("Done.")
+        generation += arg
     end
 
     function next_generation_custom(arg::Integer)
@@ -124,6 +127,7 @@ function name_evolution()
             population = evolve!(population, size, standard)
         end
         println("Done.")
+        generation += arg
     end
 
     function show_top(arg::Integer)
@@ -205,7 +209,7 @@ function name_evolution()
     
     while true
         try
-            stuff = split(input("> "))
+            stuff = split(input("gen[$(generation)]> "))
             cmd = stuff[1]
             arg = length(stuff) > 1 ? parseint(stuff[2]) : 1
             get(cmd_dict, cmd, not_found)[1](arg)
