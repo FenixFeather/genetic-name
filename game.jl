@@ -137,12 +137,15 @@ function name_evolution()
     end
 
     function show_history(arg)
-        wanted = input_int("Which name (enter number according to top)? ",false,1:length(population))
-        println(string(population[wanted]))
-        for (ii,name) in enumerate(population[wanted].names)
-            println("History of subname $(ii):")
-            output_list(name.history)
+        if (1 <= arg <= length(population))
+            println(string(population[arg]))
+            for (ii,name) in enumerate(population[arg].names)
+                println("History of subname $(ii):")
+                output_list(name.history)
+            end
+            return
         end
+        println("Name with index $(arg) was not found.")
     end
 
     function nuke(arg::Integer)
@@ -182,6 +185,22 @@ function name_evolution()
         end
     end
 
+    function display_info(arg::Integer)
+        if !(1 <= arg <= length(population))
+            println("Could not find name with index $(arg).")
+            return
+        end
+        name = population[arg]
+        println(string(name))
+        println("--------------------------------")
+        println("Parents: ")
+        for (ii,subname) in enumerate(name.names)
+            println("Subname $(ii)")
+            output_list(subname.parents)
+        end
+        println("Fitness: $(name.fitness)")
+    end
+
     cmd_dict = Dict{String,Function}()
 
     cmd_dict = [
@@ -192,13 +211,15 @@ function name_evolution()
                 "nextc"=>(next_generation_custom,
                           "Choose arbitrary name from population or input name as most fit and simulate one generation."),
                 "history"=>(show_history,
-                            "Show the history of a name."),
+                            "Show the history of a name whose index is the argument."),
                 "top"=>(show_top,
                         "Show the most fit member(s) of the population."),
                 "nuke"=>(nuke,
                          "Deploy a nuclear device, causing massive damage to the genes of the names."),
                 "help"=>(helpme,
                          "Get help."),
+                "cat"=>(display_info,
+                        "Displays info on the name whose index is the argument."),
                 "quit"=>(finish,
                          "Leave."),
                 ]
