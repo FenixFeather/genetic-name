@@ -6,11 +6,19 @@ module InputStuff
 export input, input_int, input_string, input_choose, input_number, output_list, sample
 
 function input(prompt::String="")
+    ## Grab input from the command line and strip it of newline characters.
+    ## @param prompt The string to be printed before input.
+    ## @return The inputted string without the newline.
     print(prompt)
     return chomp(readline())
 end
 
 function input_int(prompt::String="",natural::Bool=false,range::Range1=0:0)
+    ## Get an integer, optionally one that is natural or within a range.
+    ## @param prompt The string to be printed before getting input.
+    ## @param natural Whether the integer should be a natural number.
+    ## @param range The range the integer should be in.
+    ## @return The final integer.
     result = 0
     
     if range != 0:0
@@ -90,8 +98,10 @@ function input_choose(choices::Array, prompt::String="", list_choices=true)
 end
 
 function output_list(choices::Array)
-    for (index,choice) in enumerate(choices)
-        println("$(index). $(string(choice))")
+    if !isempty(choices)
+        for (index,choice) in enumerate(choices)
+            println("$(index). $(string(choice))")
+        end
     end
 end
 
