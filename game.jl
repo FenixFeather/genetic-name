@@ -132,8 +132,21 @@ function name_evolution()
 
     function show_top(arg::Integer)
         ## wanted = input_int("How many? ",false,1:length(population))
-        wanted = arg
-        output_list([string(name) for name in population[1:wanted]])
+        if (1 <= arg <= length(population))
+            wanted = arg
+            output_list([string(name) for name in population[1:wanted]])
+            return
+        end
+        println("Invalid argument.")
+    end
+
+    function show_sample(arg::Integer)
+        if (1 <= arg <= length(population))
+            the_sample = sample(population,arg,false)
+            output_list(the_sample)
+            return
+        end
+        println("Invalid sample size.")
     end
 
     function show_history(arg)
@@ -214,6 +227,8 @@ function name_evolution()
                             "Show the history of a name whose index is the argument."),
                 "top"=>(show_top,
                         "Show the most fit member(s) of the population."),
+                "sample"=>(show_sample,
+                           "Show a random sample of the population, with the sample size as the argument."),
                 "nuke"=>(nuke,
                          "Deploy a nuclear device, causing massive damage to the genes of the names."),
                 "help"=>(helpme,
